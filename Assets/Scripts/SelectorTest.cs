@@ -56,15 +56,34 @@ public class SelectorTest : MonoBehaviour
             selectorCube.transform.position = new Vector3(Mathf.Round(hit.point.x), hit.point.y - 0.49f, Mathf.Round(hit.point.z));
         }
 
-        if(Input.GetMouseButtonDown(0))
+        GameObject curBlock = GetObjectAt(selectorCube.transform.position);
+        if (Input.GetMouseButton(0))
         {
-            GameObject curBlock = GetObjectAt(selectorCube.transform.position);
-
             if(curBlock == null)
             {
                 GameObject newBlock = GameObject.Instantiate(roomBlock);
                 newBlock.transform.position = selectorCube.transform.position;
                 newBlock.GetComponent<Voxel>().Init();
+            }
+        }
+
+        if(Input.GetMouseButton(1))
+        {
+            if (curBlock != null)
+            {
+                GameObject[] curBlocks = GetObjectAround(curBlock.transform.position);
+
+                cubeGrid.Remove(new Vector2(curBlock.transform.position.x, curBlock.transform.position.z));
+
+                for (int i = 0; i < 4; ++i)
+                {
+                    if (curBlocks[i] == null)
+                        continue;
+
+                    curBlocks[i].GetComponent<Voxel>().UpdateWalls();
+                }
+
+                Destroy(curBlock);
             }
         }
     }

@@ -51,10 +51,29 @@ public class Voxel : MonoBehaviour
                 break;
             case 1:
                 GetComponent<MeshFilter>().mesh = oneWallPrefab.GetComponent<MeshFilter>().sharedMesh;
-                transform.eulerAngles = new Vector3(0, yesNull[0]*(90f) , 0);
+                transform.eulerAngles = new Vector3(0, yesNull[0]*(-90f) , 0);
                 break;
             case 2:
-                GetComponent<MeshFilter>().mesh = cornerWallPrefab.GetComponent<MeshFilter>().sharedMesh;
+                int tot = Mathf.RoundToInt(notNull[0] + notNull[1]);
+
+                if (tot % 2 == 0) //Passage
+                {
+                    GetComponent<MeshFilter>().mesh = passagePrefab.GetComponent<MeshFilter>().sharedMesh;
+                    transform.eulerAngles = new Vector3(0, notNull[0]*90f, 0);
+                }
+                else //Corner
+                {
+                    Debug.Log(yesNull[0]);
+                    GetComponent<MeshFilter>().mesh = cornerWallPrefab.GetComponent<MeshFilter>().sharedMesh;
+                
+                    if(notNull[0] + notNull[1] == yesNull[1])
+                    {
+                        yesNull[0] = yesNull[1];
+                    }
+
+                    transform.eulerAngles = new Vector3(0, (yesNull[0]  + 2)%4 * -90f, 0);
+                }
+
                 break;
             case 3:
                 GetComponent<MeshFilter>().mesh = threeWallPrefab.GetComponent<MeshFilter>().sharedMesh;
